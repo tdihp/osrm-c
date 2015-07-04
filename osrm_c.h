@@ -8,10 +8,11 @@ extern "C" {
 #include <stddef.h>
 
 /* object declearations */
-typedef struct osrm_t                   osrm_t;
-typedef struct osrm_config_t            osrm_config_t;
-typedef struct osrm_query_t  osrm_query_t;
-typedef struct osrm_json_handler_t      osrm_json_handler_t;
+typedef struct osrm_t               osrm_t;
+typedef struct osrm_config_t        osrm_config_t;
+typedef struct osrm_query_t         osrm_query_t;
+typedef struct osrm_json_handler_t  osrm_json_handler_t;
+typedef struct osrm_json_renderer_t osrm_json_renderer_t;
 
 /* osrm_t */
 extern osrm_t* osrm_create(const osrm_config_t* config, char** errptr);
@@ -64,8 +65,18 @@ extern osrm_json_handler_t* osrm_json_handler_create(
     void (*append_number)(void*, double),
     void (*append_bool)(void*, bool),
     void (*append_null)(void*));
-
 extern void osrm_json_handler_destroy(osrm_json_handler_t*);
+
+/* osrm_json_renderer_t
+
+A json renderer
+*/
+extern osrm_json_renderer_t* osrm_json_renderer_create();
+extern void osrm_json_renderer_destroy(osrm_json_renderer_t*);
+/* return value is size, the returned string is not zero-terminated */
+extern size_t osrm_json_renderer_harvest(osrm_json_renderer_t*, char**);
+extern osrm_json_handler_t* osrm_json_renderer_create_handler(
+    osrm_json_renderer_t*);
 
 
 #ifdef __cplusplus
