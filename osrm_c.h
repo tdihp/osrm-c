@@ -10,8 +10,7 @@ extern "C" {
 /* object declearations */
 typedef struct osrm_t                   osrm_t;
 typedef struct osrm_config_t            osrm_config_t;
-typedef struct osrm_route_parameters_t  osrm_route_parameters_t;
-typedef struct osrm_server_paths_t      osrm_server_paths_t;
+typedef struct osrm_query_t  osrm_query_t;
 typedef struct osrm_json_handler_t      osrm_json_handler_t;
 
 /* osrm_t */
@@ -19,7 +18,7 @@ extern osrm_t* osrm_create(const osrm_config_t* config, char** errptr);
 extern void osrm_destroy(osrm_t*);
 extern void osrm_run_query(
     osrm_t*,
-    osrm_route_parameters_t* query,
+    osrm_query_t* query,
     int* code,
     osrm_json_handler_t* json_handler,
     char** errptr);
@@ -27,65 +26,35 @@ extern void osrm_run_query(
 /* osrm_config_t */
 extern osrm_config_t* osrm_config_create();
 extern void osrm_config_destroy(osrm_config_t*);
-extern void osrm_config_set_server_paths(
-    osrm_config_t*, const osrm_server_paths_t* server_paths);
+extern void osrm_config_set_path(osrm_config_t*, const char* key, const char* path);
 extern void osrm_config_set_max_locations_distance_table(osrm_config_t*, int);
 extern void osrm_config_set_max_locations_map_matching(osrm_config_t*, int);
 extern void osrm_config_set_use_shared_memory(osrm_config_t*, bool);
 
-/* osrm_route_parameters_t */
-extern osrm_route_parameters_t* osrm_route_parameter_create();
-extern void osrm_route_parameter_destroy(osrm_route_parameters_t*);
-extern void osrm_route_parameter_set_zoom_level(
-    osrm_route_parameters_t*, short);
-extern void osrm_route_parameter_set_number_of_results(
-    osrm_route_parameters_t*, short);
-extern void osrm_route_parameter_set_alternate_route_flag(
-    osrm_route_parameters_t*, bool);
-extern void osrm_route_parameter_set_uturn(
-    osrm_route_parameters_t*, bool);
-extern void osrm_route_parameter_set_all_uturns(
-    osrm_route_parameters_t*, bool);
-extern void osrm_route_parameter_set_classify(
-    osrm_route_parameters_t*, bool);
-extern void osrm_route_parameter_set_matching_beta(
-    osrm_route_parameters_t*, double);
-extern void osrm_route_parameter_set_gps_precision(
-    osrm_route_parameters_t*, double);
-extern void osrm_route_parameter_set_deprecated_api_flag(
-    osrm_route_parameters_t*, bool);
-extern void osrm_route_parameter_set_checksum(
-    osrm_route_parameters_t*, unsigned);
-extern void osrm_route_parameter_set_instruction_flag(
-    osrm_route_parameters_t*, bool);
-extern void osrm_route_parameter_set_service(
-    osrm_route_parameters_t*, const char*);
-extern void osrm_route_parameter_set_output_format(
-    osrm_route_parameters_t*, const char*);
-extern void osrm_route_parameter_set_jsonp_parameter(
-    osrm_route_parameters_t*, const char*);
-extern void osrm_route_parameter_add_hint(
-    osrm_route_parameters_t*, const char*);
-extern void osrm_route_parameter_add_timestamp(
-    osrm_route_parameters_t*, unsigned);
-extern void osrm_route_parameter_set_language(
-    osrm_route_parameters_t*, const char*);
-extern void osrm_route_parameter_set_geometry_flag(
-    osrm_route_parameters_t*, bool);
-extern void osrm_route_parameter_set_compression_flag(
-    osrm_route_parameters_t*, bool);
-extern void osrm_route_parameter_add_coordinate(
-    osrm_route_parameters_t*, double lat, double lon);
-extern void osrm_route_parameter_get_coordinates_from_geometry(
-    osrm_route_parameters_t*, const char*);
+/* osrm_query_t */
+extern osrm_query_t* osrm_query_create();
+extern void osrm_query_destroy(osrm_query_t*);
+extern void osrm_query_set_zoom_level(osrm_query_t*, short);
+extern void osrm_query_set_number_of_results(osrm_query_t*, short);
+extern void osrm_query_set_alternate_route_flag(osrm_query_t*, bool);
+extern void osrm_query_set_uturn(osrm_query_t*, bool);
+extern void osrm_query_set_classify(osrm_query_t*, bool);
+extern void osrm_query_set_matching_beta(osrm_query_t*, double);
+extern void osrm_query_set_gps_precision(osrm_query_t*, double);
+extern void osrm_query_set_checksum(osrm_query_t*, unsigned);
+extern void osrm_query_set_instruction_flag(osrm_query_t*, bool);
+extern void osrm_query_set_service(osrm_query_t*, const char*);
+extern void osrm_query_add_hint(osrm_query_t*, const char*);
+extern void osrm_query_add_timestamp(osrm_query_t*, unsigned);
+extern void osrm_query_set_language(osrm_query_t*, const char*);
+extern void osrm_query_set_geometry_flag(osrm_query_t*, bool);
+extern void osrm_query_set_compression_flag(osrm_query_t*, bool);
+extern void osrm_query_add_coordinate(osrm_query_t*, double lat, double lon);
 
-/* osrm_server_path_t */
-extern osrm_server_paths_t* osrm_server_paths_create();
-extern void osrm_server_paths_destroy(osrm_server_paths_t*);
-extern void osrm_server_paths_set(
-    osrm_server_paths_t*, const char* key, const char* path);
+/* osrm_json_handler_t
 
-/* osrm_json_handler_t */
+A simple minimalist json streaming interface
+*/
 extern osrm_json_handler_t* osrm_json_handler_create(
     void* state,
     void (*push_object)(void*),

@@ -12,8 +12,8 @@ extern "C" {
 
 struct osrm_t                   { OSRM*             rep; };
 struct osrm_config_t            { libosrm_config*   rep; };
-struct osrm_route_parameters_t  { RouteParameters*  rep; };
-struct osrm_server_paths_t      { ServerPaths*      rep; };
+struct osrm_query_t  { RouteParameters*  rep; };
+struct osrm_paths_t      { ServerPaths*      rep; };
 struct osrm_json_handler_t {
     void* state;
     void (*push_object)(void*);
@@ -99,7 +99,7 @@ void osrm_destroy(osrm_t* engine) {
 
 void osrm_run_query(
     osrm_t* engine,
-    osrm_route_parameters_t* query,
+    osrm_query_t* query,
     int* code,
     osrm_json_handler_t* json_handler,
     char** errptr) {
@@ -132,12 +132,11 @@ void osrm_config_destroy(osrm_config_t* config) {
   delete config;
 }
 
-void osrm_config_set_server_paths(
-    osrm_config_t* config,
-    const osrm_server_paths_t* server_paths) {
-  config->rep->server_paths = *server_paths->rep;
+void osrm_config_set_path(
+    osrm_config_t* config, const char* key, const char* path) {
+  config->rep->server_paths[key] = path;
 }
-    
+
 void osrm_config_set_max_locations_distance_table(
     osrm_config_t* config,
     int value) {
@@ -156,141 +155,81 @@ void osrm_config_set_use_shared_memory(
   config->rep->use_shared_memory = value;
 }
 
-/* osrm_route_parameters_t */
-osrm_route_parameters_t* osrm_route_parameter_create() {
-  osrm_route_parameters_t* params = new osrm_route_parameters_t;
+/* osrm_query_t */
+osrm_query_t* osrm_query_create() {
+  osrm_query_t* params = new osrm_query_t;
   params->rep = new RouteParameters;
   return params;
 }
 
-void osrm_route_parameter_destroy(osrm_route_parameters_t* params) {
+void osrm_query_destroy(osrm_query_t* params) {
   delete params->rep;
   delete params;
 }
 
-void osrm_route_parameter_set_zoom_level(
-    osrm_route_parameters_t* params,
-    short value) {
+void osrm_query_set_zoom_level(osrm_query_t* params, short value) {
   params->rep->setZoomLevel(value);
 }
 
-void osrm_route_parameter_set_number_of_results(
-    osrm_route_parameters_t* params, short value) {
+void osrm_query_set_number_of_results(osrm_query_t* params, short value) {
   params->rep->setNumberOfResults(value);
 }
 
-void osrm_route_parameter_set_alternate_route_flag(
-    osrm_route_parameters_t* params, bool value) {
+void osrm_query_set_alternate_route_flag(osrm_query_t* params, bool value) {
   params->rep->setAlternateRouteFlag(value);
 }
 
-void osrm_route_parameter_set_uturn(
-    osrm_route_parameters_t* params, bool value) {
+void osrm_query_set_uturn(osrm_query_t* params, bool value) {
   params->rep->setUTurn(value);
 }
 
-void osrm_route_parameter_set_all_uturns(
-    osrm_route_parameters_t* params, bool value) {
-  params->rep->setAllUTurns(value);
-}
-
-void osrm_route_parameter_set_classify(
-    osrm_route_parameters_t* params, bool value) {
+void osrm_query_set_classify(osrm_query_t* params, bool value) {
   params->rep->setClassify(value);
 }
 
-void osrm_route_parameter_set_matching_beta(
-    osrm_route_parameters_t* params, double value) {
+void osrm_query_set_matching_beta(osrm_query_t* params, double value) {
   params->rep->setMatchingBeta(value);
 }
 
-void osrm_route_parameter_set_gps_precision(
-    osrm_route_parameters_t* params, double value) {
+void osrm_query_set_gps_precision(osrm_query_t* params, double value) {
   params->rep->setGPSPrecision(value);
 }
 
-void osrm_route_parameter_set_deprecated_api_flag(
-    osrm_route_parameters_t* params, bool value) {
-  params->rep->deprecatedAPI = value;
-}
-
-void osrm_route_parameter_set_checksum(
-    osrm_route_parameters_t* params, unsigned value) {
+void osrm_query_set_checksum(osrm_query_t* params, unsigned value) {
   params->rep->setChecksum(value);
 }
 
-void osrm_route_parameter_set_instruction_flag(
-    osrm_route_parameters_t* params, bool value) {
+void osrm_query_set_instruction_flag(osrm_query_t* params, bool value) {
   params->rep->setInstructionFlag(value);
 }
 
-void osrm_route_parameter_set_service(
-    osrm_route_parameters_t* params, const char* value) {
+void osrm_query_set_service(osrm_query_t* params, const char* value) {
   params->rep->setService(value);
 }
 
-void osrm_route_parameter_set_output_format(
-    osrm_route_parameters_t* params, const char* value) {
-  params->rep->setOutputFormat(value);
-}
-
-void osrm_route_parameter_set_jsonp_parameter(
-    osrm_route_parameters_t* params, const char* value) {
-  params->rep->setJSONpParameter(value);
-}
-
-void osrm_route_parameter_add_hint(
-    osrm_route_parameters_t* params, const char* value) {
+void osrm_query_add_hint(osrm_query_t* params, const char* value) {
   params->rep->addHint(value);
 }
 
-void osrm_route_parameter_add_timestamp(
-    osrm_route_parameters_t* params, unsigned value) {
+void osrm_query_add_timestamp(osrm_query_t* params, unsigned value) {
   params->rep->addTimestamp(value);
 }
 
-void osrm_route_parameter_set_language(
-    osrm_route_parameters_t* params, const char* value) {
+void osrm_query_set_language(osrm_query_t* params, const char* value) {
   params->rep->setLanguage(value);
 }
 
-void osrm_route_parameter_set_geometry_flag(
-    osrm_route_parameters_t* params, bool value) {
+void osrm_query_set_geometry_flag(osrm_query_t* params, bool value) {
   params->rep->setGeometryFlag(value);
 }
 
-void osrm_route_parameter_set_compression_flag(
-    osrm_route_parameters_t* params, bool value) {
+void osrm_query_set_compression_flag(osrm_query_t* params, bool value) {
   params->rep->setCompressionFlag(value);
 }
 
-void osrm_route_parameter_add_coordinate(
-    osrm_route_parameters_t* params, double lat, double lon) {
+void osrm_query_add_coordinate(osrm_query_t* params, double lat, double lon) {
   const boost::fusion::vector<double, double> received_coordinates(lat, lon);
-  // params->rep->addCoordinate(boost::fusion::vector<double, double>(lat, lon));
   params->rep->addCoordinate(received_coordinates);
-}
-
-void osrm_route_parameter_get_coordinates_from_geometry(
-    osrm_route_parameters_t* params, const char* value) {
-  params->rep->getCoordinatesFromGeometry(value);
-}
-
-/* osrm_server_path_t */
-osrm_server_paths_t* osrm_server_paths_create() {
-  osrm_server_paths_t* paths = new osrm_server_paths_t;
-  paths->rep = new ServerPaths;
-  return paths;
-}
-
-void osrm_server_paths_destroy(osrm_server_paths_t* paths) {
-  delete paths->rep;
-  delete paths;
-}
-
-void osrm_server_paths_set(
-    osrm_server_paths_t* paths, const char* key, const char* path) {
-  (*paths->rep)[key] = path;
 }
 
 /* osrm_json_handler_t */
@@ -314,7 +253,7 @@ osrm_json_handler_t* osrm_json_handler_create(
   handler->append_null = append_null;
   return handler;
 }
-    
+
 void osrm_json_handler_destroy(osrm_json_handler_t* handler) {
   delete handler;
 }
