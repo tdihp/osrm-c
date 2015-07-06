@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string.h>
 #include <assert.h>
+#include <iostream>
 
 // copied from osrm-backend
 std::string escape_JSON(const std::string &input)
@@ -68,7 +69,7 @@ struct osrm_json_renderer_t {
   std::stack<Status> stack_;
 };
 
-bool ValueSwitch(osrm_json_renderer_t* json_state) {
+unsigned char ValueSwitch(osrm_json_renderer_t* json_state) {
   // used for anything that's capable to be a value
   if (json_state->stack_.empty()) {
     json_state->stack_.push(ERROR);
@@ -80,6 +81,8 @@ bool ValueSwitch(osrm_json_renderer_t* json_state) {
       break;
     case OBJECT_HALF:
       json_state->stream_ << ':';
+      json_state->stack_.pop();
+      json_state->stack_.push(OBJECT_CONTINUE);
       break;
     case ARRAY:
       json_state->stack_.pop();
@@ -180,10 +183,10 @@ void append_number(void* state, double value) {
   }
 }
 
-void append_bool(void* state, bool value) {
+void append_bool(void* state, unsigned char value) {
   osrm_json_renderer_t* json_state = (osrm_json_renderer_t*)state;
   if (ValueSwitch(json_state)) {
-    json_state->stream_ << value?"true":"false";
+    json_state->stream_ << (value?"true":"false");
   }
 }
 

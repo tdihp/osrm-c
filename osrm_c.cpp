@@ -21,7 +21,7 @@ struct osrm_json_handler_t {
     void (*pop)(void*);
     void (*append_string)(void*, const char*, size_t);
     void (*append_number)(void*, double);
-    void (*append_bool)(void*, bool);
+    void (*append_bool)(void*, unsigned char);
     void (*append_null)(void*);
 };
 
@@ -50,7 +50,8 @@ struct JsonVisitor : mapbox::util::static_visitor<> {
   void operator()(const osrm::json::Object &object) const {
     handler_->push_object(handler_->state);
     for (const auto& keyValue : object.values) {
-      mapbox::util::apply_visitor<osrm::json::Value, JsonVisitor>(*this, keyValue.first);
+      handler_->append_string(
+        handler_->state, keyValue.first.data(), keyValue.first.size());
       mapbox::util::apply_visitor<osrm::json::Value, JsonVisitor>(*this, keyValue.second);
     }
     handler_->pop(handler_->state);
@@ -151,7 +152,7 @@ void osrm_config_set_max_locations_map_matching(
 
 void osrm_config_set_use_shared_memory(
     osrm_config_t* config,
-    bool value) {
+    unsigned char value) {
   config->rep->use_shared_memory = value;
 }
 
@@ -159,6 +160,7 @@ void osrm_config_set_use_shared_memory(
 osrm_query_t* osrm_query_create() {
   osrm_query_t* params = new osrm_query_t;
   params->rep = new RouteParameters;
+  params->rep->output_format = "json";
   return params;
 }
 
@@ -175,15 +177,15 @@ void osrm_query_set_number_of_results(osrm_query_t* params, short value) {
   params->rep->setNumberOfResults(value);
 }
 
-void osrm_query_set_alternate_route_flag(osrm_query_t* params, bool value) {
+void osrm_query_set_alternate_route_flag(osrm_query_t* params, unsigned char value) {
   params->rep->setAlternateRouteFlag(value);
 }
 
-void osrm_query_set_uturn(osrm_query_t* params, bool value) {
+void osrm_query_set_uturn(osrm_query_t* params, unsigned char value) {
   params->rep->setUTurn(value);
 }
 
-void osrm_query_set_classify(osrm_query_t* params, bool value) {
+void osrm_query_set_classify(osrm_query_t* params, unsigned char value) {
   params->rep->setClassify(value);
 }
 
@@ -199,7 +201,7 @@ void osrm_query_set_checksum(osrm_query_t* params, unsigned value) {
   params->rep->setChecksum(value);
 }
 
-void osrm_query_set_instruction_flag(osrm_query_t* params, bool value) {
+void osrm_query_set_instruction_flag(osrm_query_t* params, unsigned char value) {
   params->rep->setInstructionFlag(value);
 }
 
@@ -219,11 +221,11 @@ void osrm_query_set_language(osrm_query_t* params, const char* value) {
   params->rep->setLanguage(value);
 }
 
-void osrm_query_set_geometry_flag(osrm_query_t* params, bool value) {
+void osrm_query_set_geometry_flag(osrm_query_t* params, unsigned char value) {
   params->rep->setGeometryFlag(value);
 }
 
-void osrm_query_set_compression_flag(osrm_query_t* params, bool value) {
+void osrm_query_set_compression_flag(osrm_query_t* params, unsigned char value) {
   params->rep->setCompressionFlag(value);
 }
 
@@ -240,7 +242,7 @@ osrm_json_handler_t* osrm_json_handler_create(
     void (*pop)(void*),
     void (*append_string)(void*, const char*, size_t),
     void (*append_number)(void*, double),
-    void (*append_bool)(void*, bool),
+    void (*append_bool)(void*, unsigned char),
     void (*append_null)(void*)) {
   osrm_json_handler_t* handler = new osrm_json_handler_t;
   handler->state = state;

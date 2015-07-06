@@ -30,26 +30,26 @@ extern void osrm_config_destroy(osrm_config_t*);
 extern void osrm_config_set_path(osrm_config_t*, const char* key, const char* path);
 extern void osrm_config_set_max_locations_distance_table(osrm_config_t*, int);
 extern void osrm_config_set_max_locations_map_matching(osrm_config_t*, int);
-extern void osrm_config_set_use_shared_memory(osrm_config_t*, bool);
+extern void osrm_config_set_use_shared_memory(osrm_config_t*, unsigned char);
 
 /* osrm_query_t */
 extern osrm_query_t* osrm_query_create();
 extern void osrm_query_destroy(osrm_query_t*);
 extern void osrm_query_set_zoom_level(osrm_query_t*, short);
 extern void osrm_query_set_number_of_results(osrm_query_t*, short);
-extern void osrm_query_set_alternate_route_flag(osrm_query_t*, bool);
-extern void osrm_query_set_uturn(osrm_query_t*, bool);
-extern void osrm_query_set_classify(osrm_query_t*, bool);
+extern void osrm_query_set_alternate_route_flag(osrm_query_t*, unsigned char);
+extern void osrm_query_set_uturn(osrm_query_t*, unsigned char);
+extern void osrm_query_set_classify(osrm_query_t*, unsigned char);
 extern void osrm_query_set_matching_beta(osrm_query_t*, double);
 extern void osrm_query_set_gps_precision(osrm_query_t*, double);
 extern void osrm_query_set_checksum(osrm_query_t*, unsigned);
-extern void osrm_query_set_instruction_flag(osrm_query_t*, bool);
+extern void osrm_query_set_instruction_flag(osrm_query_t*, unsigned char);
 extern void osrm_query_set_service(osrm_query_t*, const char*);
 extern void osrm_query_add_hint(osrm_query_t*, const char*);
 extern void osrm_query_add_timestamp(osrm_query_t*, unsigned);
 extern void osrm_query_set_language(osrm_query_t*, const char*);
-extern void osrm_query_set_geometry_flag(osrm_query_t*, bool);
-extern void osrm_query_set_compression_flag(osrm_query_t*, bool);
+extern void osrm_query_set_geometry_flag(osrm_query_t*, unsigned char);
+extern void osrm_query_set_compression_flag(osrm_query_t*, unsigned char);
 extern void osrm_query_add_coordinate(osrm_query_t*, double lat, double lon);
 
 /* osrm_json_handler_t
@@ -63,7 +63,7 @@ extern osrm_json_handler_t* osrm_json_handler_create(
     void (*pop)(void*),
     void (*append_string)(void*, const char*, size_t),
     void (*append_number)(void*, double),
-    void (*append_bool)(void*, bool),
+    void (*append_bool)(void*, unsigned char),
     void (*append_null)(void*));
 extern void osrm_json_handler_destroy(osrm_json_handler_t*);
 
