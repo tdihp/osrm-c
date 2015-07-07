@@ -160,7 +160,6 @@ void osrm_config_set_use_shared_memory(
 osrm_query_t* osrm_query_create() {
   osrm_query_t* params = new osrm_query_t;
   params->rep = new RouteParameters;
-  params->rep->output_format = "json";
   return params;
 }
 

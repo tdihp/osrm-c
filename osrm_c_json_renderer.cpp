@@ -158,6 +158,8 @@ void append_string(void* state, const char* data, size_t size) {
       break;
     case OBJECT_HALF:
       json_state->stream_ << ':';
+      json_state->stack_.pop();
+      json_state->stack_.push(OBJECT_CONTINUE);
       break;
     case ARRAY:
       json_state->stack_.pop();
