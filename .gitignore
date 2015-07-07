@@ -1,6 +1,13 @@
 # vagrant
 .vagrant
 
+#scons
+.sconsign.dblite
+build/*
+
+#osrm
+stxxl.*
+
 # Compiled Object files
 *.slo
 *.lo
