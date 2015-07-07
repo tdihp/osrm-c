@@ -14,6 +14,10 @@ typedef struct osrm_query_t         osrm_query_t;
 typedef struct osrm_json_handler_t  osrm_json_handler_t;
 typedef struct osrm_json_renderer_t osrm_json_renderer_t;
 
+/* versioning interface */
+extern const char* osrm_version();  /*libOSRM version*/
+extern const char* osrm_c_version();  /*version of this c wrapper*/
+
 /* osrm_t */
 extern osrm_t* osrm_create(const osrm_config_t* config, char** errptr);
 extern void osrm_destroy(osrm_t*);
