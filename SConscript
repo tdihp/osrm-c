@@ -12,8 +12,12 @@ sources = [
 	'version.c',
 ]
 
+# env.ParseConfig('pkg-config libosrm --cflags --libs --static')
+env.ParseConfig('pkg-config libosrm --cflags --libs')
+env.Append(LIBS=['boost_filesystem', 'boost_thread'])
+
 ## XXX: should add SHLIBVERSION=osrm_c_version
 env.SharedLibrary(target='osrm_c', source=sources)
-env.ParseConfig('pkg-config libosrm --cflags --libs')
+
 
 SConscript('test/SConscript')

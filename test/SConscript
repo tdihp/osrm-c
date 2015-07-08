@@ -1,8 +1,6 @@
 Program(target='test',
         source='test.c',
         LIBS=['osrm_c',
-              'boost_filesystem',
-              'boost_thread',
               ], LIBPATH='..', CPPPATH='..')
 
 SConscript('data/SConscript', duplicate=0)
