@@ -23,7 +23,7 @@ sources = [
 
 # env.ParseConfig('pkg-config libosrm --cflags --libs --static')
 env.ParseConfig('pkg-config libosrm --cflags --libs')
-env.Append(LIBS=['boost_filesystem', 'boost_thread'])
+env.Append(LIBS=['boost_filesystem', 'boost_thread'], CCFLAGS='-O3')
 
 ## XXX: should add SHLIBVERSION=osrm_c_version
 osrm_c = env.SharedLibrary(target='osrm_c',
