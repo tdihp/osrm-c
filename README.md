@@ -11,13 +11,9 @@ And I also think it's cool to have julia/rust/go bindings.
 
 ## Build
 
-building osrm-c requires all dependencies required for building osrm, and scons.
+building osrm-c requires osrm to be installed,
+all dependencies required for building osrm, and scons.
 
-1. build and install osrm
-2. run scons
-
-## Dependency
-
-## license
-
-New BSD license
+    git clone https://github.com/tdihp/osrm-c.git && cd osrm-c
+    scons
+    # scons install
