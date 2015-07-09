@@ -1,18 +1,21 @@
 # osrm-c
 
-C-binding to the [Open Source Routing Machine - OSRM](https://github.com/Project-OSRM/osrm-backend).
+C-wrapper to the [Open Source Routing Machine - OSRM](https://github.com/Project-OSRM/osrm-backend).
 
 ## Why?
 
-I wanted a fast Python binding for the library.
-And I also think it's cool to have julia/rust/go bindings.
-
-> It's the OSRM binding I deserves, but not the one I needs.
+I wanted a fast Python binding for the library (check `example/`).
+And I also think it's cool to have julia/rust/go bindings
+(and a c-wrapper would just make those real-easy).
 
 ## Build
 
-building osrm-c requires osrm to be installed,
-all dependencies required for building osrm, and scons.
+Building osrm-c requires osrm to be installed,
+and all dependencies required for building osrm,
+plus [scons](http://www.scons.org/) for building.
+
+For how to build/install osrm, check
+[osrm's wiki page](https://github.com/Project-OSRM/osrm-backend/wiki/Building-OSRM).
 
     git clone https://github.com/tdihp/osrm-c.git && cd osrm-c
     scons
