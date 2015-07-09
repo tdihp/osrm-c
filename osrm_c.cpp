@@ -10,10 +10,10 @@
 
 extern "C" {
 
-struct osrm_t                   { OSRM*             rep; };
-struct osrm_config_t            { libosrm_config*   rep; };
-struct osrm_query_t  { RouteParameters*  rep; };
-struct osrm_paths_t      { ServerPaths*      rep; };
+struct osrm_t               { OSRM*             rep; };
+struct osrm_config_t        { libosrm_config*   rep; };
+struct osrm_query_t         { RouteParameters*  rep; };
+struct osrm_paths_t         { ServerPaths*      rep; };
 struct osrm_json_handler_t {
     void* state;
     void (*push_object)(void*);
@@ -82,6 +82,7 @@ private:
 };
 
 /* osrm_t */
+
 osrm_t* osrm_create(const osrm_config_t* config, char** errptr) {
   osrm_t* engine = new osrm_t;
   try {
@@ -122,6 +123,7 @@ void osrm_run_query(
 }
 
 /* osrm_config_t */
+
 osrm_config_t* osrm_config_create() {
   osrm_config_t* config = new osrm_config_t;
   config->rep = new libosrm_config;
@@ -157,6 +159,7 @@ void osrm_config_set_use_shared_memory(
 }
 
 /* osrm_query_t */
+
 osrm_query_t* osrm_query_create() {
   osrm_query_t* params = new osrm_query_t;
   params->rep = new RouteParameters;
@@ -234,6 +237,7 @@ void osrm_query_add_coordinate(osrm_query_t* params, double lat, double lon) {
 }
 
 /* osrm_json_handler_t */
+
 osrm_json_handler_t* osrm_json_handler_create(
     void* state,
     void (*push_object)(void*),
