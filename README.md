@@ -20,3 +20,14 @@ For how to build/install osrm, check
     git clone https://github.com/tdihp/osrm-c.git && cd osrm-c
     scons
     # scons install
+
+Alternatively, you can just grab `osrm_c.cpp` and do whatever convenient.
+
+## Vagrant
+
+I've provided vagrant config, when using windows host, symlink
+[won't work](http://stackoverflow.com/questions/24200333/symbolic-links-and-synced-folders-in-vagrant).
+
+    mkdir -p /vagrant/build
+    sudo mount -t tmpfs -o size=1G tmpfs /vagrant/build
+    sudo chown vagrant:vagrant /vagrant/build
