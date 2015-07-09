@@ -1,0 +1,6 @@
+Program(target='test',
+        source='test.c',
+        LIBS=['osrm_c',
+              ], LIBPATH='..', CPPPATH='..')
+
+SConscript('data/SConscript', duplicate=0)

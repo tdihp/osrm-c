@@ -2,9 +2,9 @@
 #include <stack>
 #include <string>
 #include <sstream>
+#include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include <iostream>
 
 // copied from osrm-backend
 std::string escape_JSON(const std::string &input)
@@ -53,12 +53,12 @@ extern "C" {
   
 enum Status {
   ERROR,
-  VALUE, // waiting any value
-  OBJECT, // at clean state of object
-  OBJECT_HALF, // object with only key filled
-  OBJECT_CONTINUE, // object with some pairs
-  ARRAY, // at clean state of array
-  ARRAY_CONTINUE, // array with some elements
+  VALUE,            // waiting any value
+  OBJECT,           // at clean state of object
+  OBJECT_HALF,      // object with only key filled
+  OBJECT_CONTINUE,  // object with some pairs
+  ARRAY,            // at clean state of array
+  ARRAY_CONTINUE,   // array with some elements
 };
 
 struct osrm_json_renderer_t {
@@ -158,6 +158,8 @@ void append_string(void* state, const char* data, size_t size) {
       break;
     case OBJECT_HALF:
       json_state->stream_ << ':';
+      json_state->stack_.pop();
+      json_state->stack_.push(OBJECT_CONTINUE);
       break;
     case ARRAY:
       json_state->stack_.pop();

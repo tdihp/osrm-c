@@ -1,0 +1,7 @@
+const char* osrm_version() {
+    return "@OSRM_VERSION@";
+}
+
+const char* osrm_c_version() {
+    return "@OSRM_C_VERSION@";
+}

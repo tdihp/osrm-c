@@ -1,11 +1,10 @@
-#ifndef OSRM_C_H
-#define OSRM_C_H
+"""it's a simple Python binding that only does viaroute queries."""
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+from ctypes.util import find_library
+from cffi import FFI
 
-#include <stddef.h>
+cdef = '''\
+extern void free(void*);
 
 /* object declearations */
 typedef struct osrm_t               osrm_t;
@@ -81,10 +80,62 @@ extern void osrm_json_renderer_destroy(osrm_json_renderer_t*);
 extern size_t osrm_json_renderer_harvest(osrm_json_renderer_t*, char**);
 extern osrm_json_handler_t* osrm_json_renderer_create_handler(
     osrm_json_renderer_t*);
+'''
 
+class OSRM(object):
+    def __init__(self, dllpath, base=None):
+        ffi = FFI()
+        ffi.cdef(cdef)
+        lib = ffi.dlopen(dllpath)
+        config = ffi.gc(lib.osrm_config_create(), lib.osrm_config_destroy)
+        if base:
+            lib.osrm_config_set_path(config, 'base', base)
+            lib.osrm_config_set_use_shared_memory(config, 0)
+        else:
+            lib.osrm_config_set_use_shared_memory(config, 1)
+        errptr = ffi.new('char**', ffi.NULL)
+        engine = ffi.gc(lib.osrm_create(config, errptr), lib.osrm_destroy)
+        assert errptr[0] == ffi.NULL, ffi.string(errptr[0])
+        self.engine = engine
+        self.lib = lib
+        self.ffi = ffi
 
-#ifdef __cplusplus
-}  /* end extern "C" */
-#endif
+    def query(self, locs):
+        ffi = self.ffi
+        lib = self.lib
+        json_renderer = lib.osrm_json_renderer_create()
+        json_handler = lib.osrm_json_renderer_create_handler(json_renderer)
+        q = lib.osrm_query_create()
+        codeptr = ffi.new('int*', 0)
+        errptr = ffi.new('char**', ffi.NULL)
+        dataptr = ffi.new('char**', ffi.NULL)
+        try:
+            lib.osrm_query_set_service(q, 'viaroute')
+            lib.osrm_query_set_instruction_flag(q, 0);
+            lib.osrm_query_set_alternate_route_flag(q, 0);
+            lib.osrm_query_set_geometry_flag(q, 0);
 
-#endif /* OSRM_C_H */
+            for lat, lon in locs:
+                lib.osrm_query_add_coordinate(q, lat, lon);
+
+            lib.osrm_run_query(self.engine, q, codeptr, json_handler, errptr)
+
+            if errptr[0] != ffi.NULL:
+                raise RuntimeError(ffi.string(errptr[0]))
+
+            if codeptr[0] != 200:
+                return None
+
+            size = lib.osrm_json_renderer_harvest(json_renderer, dataptr)
+            if not size:
+                return None
+
+            return str(ffi.buffer(dataptr[0], size))
+        finally:
+            lib.osrm_json_renderer_destroy(json_renderer)
+            lib.osrm_json_handler_destroy(json_handler)
+            lib.osrm_query_destroy(q)
+            if errptr[0] != ffi.NULL:
+                lib.free(errptr[0])
+            if dataptr[0] != ffi.NULL:
+                lib.free(dataptr[0])
