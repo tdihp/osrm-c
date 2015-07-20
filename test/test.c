@@ -32,7 +32,7 @@ int main(int argc, const char* argv[]) {
     char* data = NULL;
     size_t data_size = osrm_json_renderer_harvest(json_renderer, &data);
     printf("%.*s\n", (int)data_size, data);
-    free(data);
+    osrm_free(data);
     osrm_query_destroy(query);
     osrm_json_renderer_destroy(json_renderer);
     osrm_json_handler_destroy(json_handler);

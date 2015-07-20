@@ -80,6 +80,8 @@ extern void osrm_json_renderer_destroy(osrm_json_renderer_t*);
 extern size_t osrm_json_renderer_harvest(osrm_json_renderer_t*, char**);
 extern osrm_json_handler_t* osrm_json_renderer_create_handler(
     osrm_json_renderer_t*);
+
+extern void osrm_free(void*);
 '''
 
 class OSRM(object):
@@ -95,7 +97,11 @@ class OSRM(object):
             lib.osrm_config_set_use_shared_memory(config, 1)
         errptr = ffi.new('char**', ffi.NULL)
         engine = ffi.gc(lib.osrm_create(config, errptr), lib.osrm_destroy)
-        assert errptr[0] == ffi.NULL, ffi.string(errptr[0])
+        try:
+            assert errptr[0] == ffi.NULL, ffi.string(errptr[0])
+        finally:
+            if errptr[0] != ffi.NULL:
+                lib.osrm_free(errptr[0])
         self.engine = engine
         self.lib = lib
         self.ffi = ffi
@@ -136,6 +142,6 @@ class OSRM(object):
             lib.osrm_json_handler_destroy(json_handler)
             lib.osrm_query_destroy(q)
             if errptr[0] != ffi.NULL:
-                lib.free(errptr[0])
+                lib.osrm_free(errptr[0])
             if dataptr[0] != ffi.NULL:
-                lib.free(dataptr[0])
+                lib.osrm_free(dataptr[0])

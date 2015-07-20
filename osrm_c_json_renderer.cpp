@@ -210,11 +210,9 @@ void osrm_json_renderer_destroy(osrm_json_renderer_t* renderer) {
 size_t osrm_json_renderer_harvest(
     osrm_json_renderer_t* renderer, char** dataptr) {
   assert(dataptr != NULL);
+  assert(*dataptr == NULL);
   size_t size = 0;
   if (renderer->stack_.empty()) {
-    if(*dataptr != NULL) {
-      free(dataptr);
-    }
     std::string value = renderer->stream_.str();
     size = value.size();
     *dataptr = (char*)malloc(size);

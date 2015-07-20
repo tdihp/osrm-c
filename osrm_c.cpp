@@ -1,8 +1,8 @@
 #include "osrm_c.h"
 
+#include <osrm.hpp>
 #include <osrm/json_container.hpp>
 #include <osrm/libosrm_config.hpp>
-#include <osrm/osrm.hpp>
 #include <osrm/route_parameters.hpp>
 
 #include <string.h>
@@ -27,9 +27,7 @@ struct osrm_json_handler_t {
 
 void WriteError(const char* errstr, char** errptr) {
   assert(errptr != NULL);
-  if (*errptr) {
-    free(*errptr);
-  }
+  assert(*errptr == NULL);
   *errptr = (char*)malloc(strlen(errstr) + 1);
   strcpy(*errptr, errstr);
 }
@@ -261,6 +259,10 @@ osrm_json_handler_t* osrm_json_handler_create(
 
 void osrm_json_handler_destroy(osrm_json_handler_t* handler) {
   delete handler;
+}
+
+void osrm_free(void* ptr) {
+  free(ptr);
 }
 
 }
