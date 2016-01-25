@@ -1,6 +1,6 @@
 #include "osrm_c.h"
 
-#include <osrm.hpp>
+#include <osrm/osrm.hpp>
 #include <osrm/json_container.hpp>
 #include <osrm/libosrm_config.hpp>
 #include <osrm/route_parameters.hpp>
@@ -11,9 +11,8 @@
 extern "C" {
 
 struct osrm_t               { OSRM*             rep; };
-struct osrm_config_t        { libosrm_config*   rep; };
+struct osrm_config_t        { LibOSRMConfig*   rep; };
 struct osrm_query_t         { RouteParameters*  rep; };
-struct osrm_paths_t         { ServerPaths*      rep; };
 struct osrm_json_handler_t {
     void* state;
     void (*push_object)(void*);
@@ -124,7 +123,7 @@ void osrm_run_query(
 
 osrm_config_t* osrm_config_create() {
   osrm_config_t* config = new osrm_config_t;
-  config->rep = new libosrm_config;
+  config->rep = new LibOSRMConfig;
   return config;
 }
 
