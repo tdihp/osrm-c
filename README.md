@@ -23,10 +23,22 @@ For how to build/install osrm, check
 
 Alternatively, you can just grab `osrm_c.cpp` and do whatever convenient.
 
+## Versioning and Compatibility
+
+Each release of osrm-c will be able to compile against at least **ONE RELEASE**
+of osrm-backend. See `CHANGELOG.md` for release information.
+
+However `osrm-c.h` shall remain backward-compatible, unless noted otherwise
+in `CHANGELOG.md`.
+
 ## Vagrant
 
-I've provided vagrant config, when using windows host, symlink
+To aid development and testing of this wrapper, I've provided vagrant config.
+
+However, when using windows host, symlink
 [won't work](http://stackoverflow.com/questions/24200333/symbolic-links-and-synced-folders-in-vagrant).
+
+Use the following fix before running scons:
 
     mkdir -p /vagrant/build
     sudo mount -t tmpfs -o size=1G tmpfs /vagrant/build
