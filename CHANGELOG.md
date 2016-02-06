@@ -1,6 +1,8 @@
 # Change Log
 
 ## Unreleased
+
+## [0.3.0] - 2016-02-06
 ### Added
 - CHANGELOG.md
 
@@ -18,5 +20,6 @@
 ### Added
 - Initial release.
 
+[0.3.0]: https://github.com/tdihp/osrm-c/releases/tag/0.3.0
 [0.2.0]: https://github.com/tdihp/osrm-c/releases/tag/0.2.0
 [0.1.0]: https://github.com/tdihp/osrm-c/releases/tag/0.1.0
