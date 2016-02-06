@@ -77,7 +77,7 @@ Vagrant.configure(2) do |config|
     libzip-dev libboost-all-dev lua5.1 liblua5.1-0-dev libluabind-dev \
     libluajit-5.1-dev libtbb-dev
     apt-get install -y cmake scons wget
-    git clone https://github.com/Project-OSRM/osrm-backend.git
+    git clone -b master https://github.com/Project-OSRM/osrm-backend.git
     cd osrm-backend
     mkdir -p build
     cd build

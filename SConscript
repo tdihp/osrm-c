@@ -18,7 +18,7 @@ env.Substfile('version.c.in')
 sources = [
     'osrm_c.cpp',
     'osrm_c_json_renderer.cpp',
-	'version.c',
+    'version.c',
 ]
 
 # env.ParseConfig('pkg-config libosrm --cflags --libs --static')
